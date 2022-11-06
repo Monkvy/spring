@@ -1,12 +1,17 @@
 
+/// The current config.
+/// If no config was loaded, this 
+/// is set to Config::default(). 
 pub static mut CONFIG: Config = Config::default();
 
-
+/// Stores all config fields.
 #[derive(serde_derive::Deserialize)]
 pub struct Config {
     pub color: Color
 }
 
+/// Stores all colors. 
+/// E. g. background, particle color.
 #[derive(serde_derive::Deserialize)]
 pub struct Color {
     pub bg: (u8, u8, u8),
@@ -15,6 +20,7 @@ pub struct Color {
 }
 
 
+/// Load a toml config & stores it into CONFIG.
 pub fn load(path: &str) {
     let content = std::fs::read_to_string(path).unwrap();
     unsafe {

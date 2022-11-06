@@ -2,8 +2,6 @@ use sfml::graphics::{RenderWindow, CircleShape, Shape, Transformable, RenderTarg
 use crate::{Vector, util, config};
 
 
-/// Stores a particle & its 
-/// pos, velocity, accelaration, mass.
 #[derive(Clone, Copy)]
 pub struct Particle {
     pos: Vector<f32>,
@@ -14,7 +12,6 @@ pub struct Particle {
 }
 
 impl Particle {
-    /// Creates a new particle.
     pub fn new<V: Into<Vector<f32>>>(pos: V, mass: f32, dynamic: bool) -> Self {
         Self { pos: pos.try_into().unwrap(),
             vel: Vector(0., 0.),
@@ -33,7 +30,7 @@ impl Particle {
     }
 
     /// Updates the position of this particle based
-    /// on the current accelaration.
+    /// on the current accelaration & the given delta time.
     pub fn update(&mut self, dt: f32) {
         if !self.dynamic { return }
         self.vel += self.acc * dt;
@@ -41,7 +38,6 @@ impl Particle {
         self.acc = Vector(0., 0.);
     } 
 
-    /// Draws the particle to the given window.
     pub fn draw(&mut self, window: &mut RenderWindow) {
         let mut c = CircleShape::new(self.mass, 20);
         c.set_position((self.pos.0, self.pos.1));
