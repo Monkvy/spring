@@ -21,7 +21,9 @@ fn main() {
     let mut window = RenderWindow::new((800, 600), "Spring", Style::CLOSE, &Default::default());
     window.set_framerate_limit(MAX_FPS);
     
-    let mut p = Particle::new((400., 100.), 16., true);
+    let mut a = Particle::new((200., 100.), 16., true);
+    let mut b = Particle::new((600., 400.), 16., true);
+    let mut s = Spring::new(a, b, 1.);
 
     // Main loop
     let mut clock = Clock::start();
@@ -43,18 +45,28 @@ fn main() {
                 _ => ()
             }
         }
+        
+        // TODO: do this automatically (maybe use a 'pointer' in Spring::a, b?)
+        s.a = a;
+        s.b = b;
 
         // Update
         _dt = clock.restart().as_seconds();
         if running {
             // TODO: Step
-            p.apply_force((0., 2500.));
-            p.update(_dt);
+            a.apply_force((0., 2500.));
+            b.apply_force((0., 2500.));
+            s.apply();
+            a.update(_dt);
+            b.update(_dt);
         }
  
         // Render
+        // FIXME: Use config.
         window.clear(Color::BLACK);
-        p.draw(&mut window);
+        s.draw(&mut window);
+        a.draw(&mut window);
+        b.draw(&mut window);
         window.display();
     }
 }

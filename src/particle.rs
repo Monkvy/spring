@@ -4,7 +4,7 @@ use crate::Vector;
 
 #[derive(Clone, Copy)]
 pub struct Particle {
-    pos: Vector<f32>,
+    pub pos: Vector<f32>,
     vel: Vector<f32>,
     acc: Vector<f32>,
     pub mass: f32,
@@ -42,6 +42,7 @@ impl Particle {
         let mut c = CircleShape::new(self.mass, 20);
         c.set_position((self.pos.0, self.pos.1));
         
+        // FIXME: Use config.
         if self.dynamic {
             c.set_fill_color(Color::BLUE);
         } else {
