@@ -5,14 +5,14 @@
 pub static mut CONFIG: Config = Config::default();
 
 /// Stores all config fields.
-#[derive(serde_derive::Deserialize)]
+#[derive(serde_derive::Deserialize, Clone)]
 pub struct Config {
     pub color: Color
 }
 
 /// Stores all colors. 
 /// E. g. background, particle color.
-#[derive(serde_derive::Deserialize)]
+#[derive(serde_derive::Deserialize, Clone)]
 pub struct Color {
     pub bg: (u8, u8, u8),
     pub p_dynamic: (u8, u8, u8),

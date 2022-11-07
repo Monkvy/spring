@@ -5,7 +5,7 @@ mod particle;
 mod spring;
 
 use sfml::{
-    graphics::{RenderWindow, RenderTarget, Color},
+    graphics::{RenderWindow, RenderTarget},
     window::{Style, Event, Key},
     system::Clock
 };
@@ -57,7 +57,7 @@ fn main() {
         }
  
         // Render
-        window.clear(util::tuple_to_color(unsafe { config::CONFIG.color.bg}));
+        window.clear(util::tuple_to_color(unsafe { config::CONFIG.color.bg }));
         p.draw(&mut window);
         window.display();
     }
