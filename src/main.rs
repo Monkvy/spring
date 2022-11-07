@@ -1,11 +1,9 @@
-mod util;
-mod config;
 mod vector;
 mod particle;
 mod spring;
 
 use sfml::{
-    graphics::{RenderWindow, RenderTarget},
+    graphics::{RenderWindow, RenderTarget, Color},
     window::{Style, Event, Key},
     system::Clock
 };
@@ -23,8 +21,6 @@ fn main() {
     let mut window = RenderWindow::new((800, 600), "Spring", Style::CLOSE, &Default::default());
     window.set_framerate_limit(MAX_FPS);
     
-    config::load("examples/config.toml");
-
     let mut p = Particle::new((400., 100.), 16., true);
 
     // Main loop
@@ -57,7 +53,7 @@ fn main() {
         }
  
         // Render
-        window.clear(util::tuple_to_color(unsafe { config::CONFIG.color.bg }));
+        window.clear(Color::BLACK);
         p.draw(&mut window);
         window.display();
     }

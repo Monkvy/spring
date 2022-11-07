@@ -1,5 +1,5 @@
-use sfml::graphics::{RenderWindow, CircleShape, Shape, Transformable, RenderTarget};
-use crate::{Vector, util, config};
+use sfml::graphics::{RenderWindow, CircleShape, Shape, Transformable, RenderTarget, Color};
+use crate::Vector;
 
 
 #[derive(Clone, Copy)]
@@ -42,12 +42,10 @@ impl Particle {
         let mut c = CircleShape::new(self.mass, 20);
         c.set_position((self.pos.0, self.pos.1));
         
-        unsafe {
-            if self.dynamic {
-                c.set_fill_color(util::tuple_to_color(config::CONFIG.color.p_dynamic));
-            } else {
-                c.set_fill_color(util::tuple_to_color(config::CONFIG.color.p_static));
-            }
+        if self.dynamic {
+            c.set_fill_color(Color::BLUE);
+        } else {
+            c.set_fill_color(Color::RED);
         }
         window.draw(&c);
     }
