@@ -23,7 +23,7 @@ fn main() {
     
     let mut a = Particle::new((200., 100.), 16., true);
     let mut b = Particle::new((600., 400.), 16., true);
-    let mut s = Spring::new(a, b, 1.);
+    let mut s = Spring::new(Box::new(a), Box::new(b), 1.);
 
     // Main loop
     let mut clock = Clock::start();
@@ -46,9 +46,6 @@ fn main() {
             }
         }
         
-        // TODO: do this automatically (maybe use a 'pointer' in Spring::a, b?)
-        s.a = a;
-        s.b = b;
 
         // Update
         _dt = clock.restart().as_seconds();

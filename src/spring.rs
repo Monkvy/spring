@@ -4,15 +4,16 @@ use crate::Particle;
 
 
 pub struct Spring {
-    pub a: Particle,
-    pub b: Particle,
+    pub a: Box<Particle>,
+    pub b: Box<Particle>,
     force: f32,
     len: f32
 }
 
 impl Spring {
-    pub fn new(a: Particle, b: Particle, force: f32) -> Self {
-        Self { a, b, force, len: (b.pos - a.pos).mag::<f32>() }
+    pub fn new(a: Box<Particle>, b: Box<Particle>, force: f32) -> Self {
+        let len = ((*b).pos - (*a).pos).mag::<f32>();
+        Self { a, b, force, len }
     }
 
     /// Applies the spring force to the a & b
@@ -32,6 +33,8 @@ impl Spring {
 
     /// Draws a line between the two particles.
     pub fn draw(&mut self, window: &mut RenderWindow) {
+        println!("{:?}, {:?}", self.a.pos, self.b.pos);
+
         // FIXME: Use config.
         let line = vec![
             Vertex::new(Vector2f::new(self.a.pos.0 + self.a.mass, self.a.pos.1 + self.a.mass), Color::CYAN, Vector2f::new(0., 0.)),
