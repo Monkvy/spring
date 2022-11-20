@@ -1,17 +1,19 @@
 mod vector;
+mod mouse_state;
 mod particle;
 mod spring;
 
 use sfml::{
     graphics::{RenderWindow, RenderTarget, Color},
-    window::{Style, Event, Key},
+    window::{Style, Event, Key, mouse},
     system::Clock
 };
 use vector::Vector;
+use mouse_state::MouseState;
 use particle::Particle;
 use spring::Spring;
 
-const MAX_FPS: u32 = u32::MAX;
+const MAX_FPS: u32 = 144;
 
 
 fn main() {
@@ -21,9 +23,14 @@ fn main() {
     let mut window = RenderWindow::new((800, 600), "Spring", Style::CLOSE, &Default::default());
     window.set_framerate_limit(MAX_FPS);
     
-    let mut a = Particle::new((200., 100.), 16., true);
-    let mut b = Particle::new((600., 400.), 16., true);
-    let mut s = Spring::new(Box::new(a), Box::new(b), 1.);
+    let brush = 10.;
+
+    let mut mouse_state = MouseState::new();
+    let mut all: Vec<Particle> = Vec::new();
+    Particle::create(&mut all, (200., 100.), 16., false);
+    Particle::create(&mut all, (300., 200.), 16., true);
+    
+    let s = Spring::new(all[0], all[1], None);
 
     // Main loop
     let mut clock = Clock::start();
@@ -33,37 +40,55 @@ fn main() {
         while let Some(event) = window.poll_event() {
             match event {
                 Event::Closed => window.close(),
-                Event::KeyPressed { code, alt: _, ctrl: _, shift: _, system: _ } => {
-                    match code {
-                        Key::Space => running = !running,
-                        Key::Tab => {
-                            // TODO: Step
-                        },
-                        _ => ()
-                    }
+                Event::KeyPressed { code, alt: _, ctrl: _, shift: _, system: _ } if code == Key::Space => {
+                    running = !running
                 },
-                _ => ()
+                Event::MouseButtonPressed { button, x, y } => {
+                    // let pos = Vector(x, y).cast::<f32>();
+                    
+                    // TODO: Create, delete, connect particles.
+                    if button == mouse::Button::Left {
+                        // for particle in all {
+                        //     if (pos - particle.pos).mag::<f32>() < particle.mass + brush {
+
+                        //     }
+                        // }
+                    }
+
+                    mouse_state.update(event)
+                },
+                _ => () 
             }
         }
         
+        // Mouse Events
+        if mouse_state.button == Some(mouse::Button::Left) {
+            let pos = mouse_state.pos.cast::<f32>();
+            for particle in &mut all {
+                if (pos - particle.pos).mag::<f32>() < particle.mass + brush {
+                    particle.pos = pos;
+                } 
+            }
+        }
 
         // Update
         _dt = clock.restart().as_seconds();
         if running {
             // TODO: Step
-            a.apply_force((0., 2500.));
-            b.apply_force((0., 2500.));
-            s.apply();
-            a.update(_dt);
-            b.update(_dt);
+            s.update(&mut all);
+            for particle in &mut all {
+                particle.apply_force((0., 15000.));
+                particle.update(_dt);
+            }
         }
  
         // Render
         // FIXME: Use config.
         window.clear(Color::BLACK);
-        s.draw(&mut window);
-        a.draw(&mut window);
-        b.draw(&mut window);
+        s.draw(all.clone(), &mut window);
+        for particle in &mut all {
+            particle.draw(&mut window);
+        }
         window.display();
     }
 }
