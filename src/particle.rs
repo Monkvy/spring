@@ -2,11 +2,11 @@ use sfml::graphics::{RenderWindow, CircleShape, Shape, Transformable, RenderTarg
 use crate::Vector;
 
 
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct Particle {
     pub pos: Vector<f32>,
     pub mass: f32,
-    vel: Vector<f32>,
+    pub vel: Vector<f32>,
     acc: Vector<f32>,
     dynamic: bool,
     i: usize,
@@ -16,9 +16,9 @@ impl Particle {
     /// Creates a particle with the given attributes and
     /// appends it to the given list.
     /// (self.i = index of self inside 'all': Vec).
-    pub fn create<V: Into<Vector<f32>>>(all: &mut Vec<Particle>, pos: V, mass: f32, dynamic: bool) {
-        all.push(Self {
-            i: all.len(),
+    pub fn create<V: Into<Vector<f32>>>(particles: &mut Vec<Particle>, pos: V, mass: f32, dynamic: bool) {
+        particles.push(Self {
+            i: particles.len(),
             pos: pos.try_into().unwrap(),
             vel: Vector(0., 0.),
             acc: Vector(0., 0.),

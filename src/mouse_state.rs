@@ -4,6 +4,7 @@ use crate::Vector;
 
 /// Captures the pressed mouse button &
 /// current mouse position.
+#[derive(Debug)]
 pub struct MouseState {
     pub button: Option<mouse::Button>,
     pub pos: Vector<i32>
