@@ -43,14 +43,13 @@ fn main() {
                 Event::KeyPressed { code, alt: _, ctrl: _, shift: _, system: _ } if code == Key::Space => {
                     running = !running
                 },
-                Event::MouseButtonPressed { button, x, y } => {
+                Event::MouseButtonPressed { button, x: _, y: _ } => {
                     // let pos = Vector(x, y).cast::<f32>();
                     
                     // TODO: Create, delete, connect particles.
                     if button == mouse::Button::Left {
                         // for particle in all {
                         //     if (pos - particle.pos).mag::<f32>() < particle.mass + brush {
-
                         //     }
                         // }
                     }
