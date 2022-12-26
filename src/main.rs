@@ -17,12 +17,13 @@ const MAX_FPS: u32 = 144;
 
 
 fn main() {
+    
     // SFML
     let mut _dt = 0.;
     let mut window = RenderWindow::new((800, 600), "Spring", Style::CLOSE, &Default::default());
     let mut clock = Clock::start();
     window.set_framerate_limit(MAX_FPS);
-    
+     
     // Mouse state
     let mut mouse_state = MouseState::new();
     
@@ -30,7 +31,7 @@ fn main() {
     let brush = 10.;
     let mut selected: Option<Particle> = None;
     let mut running = false;
-    let mut tools = vec!["create", "delete"];
+    let mut tools = vec!["create-dyn", "create-stc", "delete"];
 
     // Particles & springs
     let mut particles: Vec<Particle> = Vec::new();
@@ -52,7 +53,7 @@ fn main() {
                     }
                 },
                 Event::MouseButtonPressed { button, x, y } => {
-                    if button == mouse::Button::Right && tools[0] == "create" {
+                    if button == mouse::Button::Right && tools[0].starts_with("create") {
                         let pos = Vector(x, y).cast::<f32>();
                         if let Some(p) = particles.iter().find(|p| (pos - p.pos).mag::<f32>() < p.mass + brush) {
                             match selected {
@@ -67,7 +68,7 @@ fn main() {
                         }
                         else {
                             selected = None;
-                            Particle::create(&mut particles, pos.cast(), 16., true);
+                            Particle::create(&mut particles, pos.cast(), 16., tools[0] == "create-dyn");
                         }
                     }
                     mouse_state.update(event)
@@ -103,7 +104,6 @@ fn main() {
         // Remove springs without two valid particles
         for spring in springs.clone() {
             if !particles.iter().any(|p| p.get_i() == spring.get_ai()) || !particles.iter().any(|p| p.get_i() == spring.get_bi()) {
-                println!("asd");
                 springs.remove(springs.iter().position(|s| *s == spring).unwrap());
             }
         }
@@ -112,7 +112,7 @@ fn main() {
         _dt = clock.restart().as_seconds();
         if running {
             for particle in &mut particles {
-                particle.apply_force((0., 15000.));
+                particle.apply_force((0., 100000.));
                 particle.update(_dt);
             }
             for spring in springs.clone() {
