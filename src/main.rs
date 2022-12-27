@@ -1,4 +1,4 @@
-mod vector;
+amod vector;
 mod mouse_state;
 mod particle;
 mod spring;
